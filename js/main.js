@@ -20,7 +20,6 @@ window.onload = function()
 	canvas.height = cHeight;
 	player = new Player(1,1,1, "", 1,1);
 	newMaze();
-	maze.generate();
 	maze.draw(ctx);
 
 
@@ -33,6 +32,7 @@ Calling update function refreshing our Canvas every ms.
 function newMaze()
 {
 	maze = new Maze(0,0,15, 15, 40, 40, 40,2,0,0,"rgb(120,0,0)");
+	maze.generate();
 }
 
 
