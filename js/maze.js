@@ -1,10 +1,10 @@
-function Room(x,y, width, height, mazePosition)
+function Room(x,y, width, height, mazePosition, color)
 {
-	this.x = x;
-	this.y = y;
+	this.position = new Vector(x,y);
 	this.width = width;
 	this.height = height;
 	this.mazePosition = new Vector(mazePosition.x, mazePosition.y);
+	this.color = color;
 
 	/*
 	Object informing if walls exist in that room. All true at the beginning.
@@ -24,21 +24,16 @@ function Room(x,y, width, height, mazePosition)
 
 }
 
-Room.prototype.addUnvisitedNeighbor = function(neighbor)
-{
-	this.unvisitedNeighbors.push(neighbor);
-}
-
-Room.prototype.drawWalls = function(ctx, wallWidth, wallHeight, color)
+Room.prototype.drawWalls = function(ctx, wallWidth, wallHeight)
 {
 	if (this.walls.up)
 	{	
 		ctx.beginPath();
-		ctx.fillStyle = color;
-		ctx.strokeStyle = color;
-		ctx.rect(this.x * this.width + this.mazePosition.x, 
-				 this.y * this.height + this.mazePosition.y,
-				 wallWidth, 
+		ctx.fillStyle = this.color;
+		ctx.strokeStyle = this.color;
+		ctx.rect(this.position.x * this.width + this.mazePosition.x, 
+				 this.position.y * this.height + this.mazePosition.y,
+				 wallWidth + wallHeight, 
 				 wallHeight);
 		ctx.stroke();
 		ctx.fill();
@@ -46,10 +41,10 @@ Room.prototype.drawWalls = function(ctx, wallWidth, wallHeight, color)
 	if (this.walls.left)
 	{	
 		ctx.beginPath();
-		ctx.fillStyle = color;
-		ctx.strokeStyle = color;
-		ctx.rect(this.x * this.width + this.mazePosition.x,
-		 		 this.y * this.height + this.mazePosition.y,
+		ctx.fillStyle = this.color;
+		ctx.strokeStyle = this.color;
+		ctx.rect(this.position.x * this.width + this.mazePosition.x,
+		 		 this.position.y * this.height + this.mazePosition.y,
 		 		 wallHeight,
 		 		 wallWidth);
 		ctx.stroke();
@@ -63,10 +58,10 @@ Room.prototype.drawDownWalls = function(ctx, wallWidth, wallHeight, color)
 	if (this.walls.down)
 	{	
 		ctx.beginPath();
-		ctx.fillStyle = color;
-		ctx.strokeStyle = color;
-		ctx.rect(this.x * this.width + this.mazePosition.x,
-				 this.y * this.height + this.height + this.mazePosition.y,
+		ctx.fillStyle = this.color;
+		ctx.strokeStyle = this.color;
+		ctx.rect(this.position.x * this.width + this.mazePosition.x,
+				 this.position.y * this.height + this.height + this.mazePosition.y,
 				 wallWidth,
 				 wallHeight);
 		ctx.stroke();
@@ -79,9 +74,9 @@ Room.prototype.drawRightWalls = function(ctx, wallWidth, wallHeight, color)
 	if (this.walls.right)
 	{	
 		ctx.beginPath();
-		ctx.fillStyle = color;
-		ctx.strokeStyle = color;
-		ctx.rect(this.x * this.width + this.width, this.y * this.height, wallHeight, wallWidth);
+		ctx.fillStyle = this.color;
+		ctx.strokeStyle = this.color;
+		ctx.rect(this.position.x * this.width + this.width, this.position.y * this.height, wallHeight, wallWidth);
 		ctx.stroke();
 		ctx.fill();
 	}
@@ -102,6 +97,7 @@ function Maze(x,y,width, height, roomHeight, roomWidth, wallWidth, wallHeight, s
 	this.startX = startX;
 	this.startY = startY;
 	this.color = color;
+	this.paths = [];
 
 	/*
 	An array containing all the rooms in our maze.
@@ -112,13 +108,14 @@ function Maze(x,y,width, height, roomHeight, roomWidth, wallWidth, wallHeight, s
 		for (var i = 0; i < this.width; i++)
 	{
 		this.rooms[i] = [];
+		this.paths[i] = [];
 	}
 
 	for (var i = 0; i < this.width; i++)
 	{
 		for (var j = 0; j < this.height; j++)
 		{
-			this.rooms[i][j] = new Room(i,j, this.roomWidth, this.roomHeight, this.position); 
+			this.rooms[i][j] = new Room(i,j, this.roomWidth, this.roomHeight, this.position, this.color); 
 		}
 	}
 
@@ -133,64 +130,69 @@ Maze.prototype.addNeighbors = function(room)
 {
 		room.unvisitedNeighbors = [];
 
-		if (room.x > 0)
+		if (room.position.x > 0)
 		{
-			if (!this.rooms[room.x - 1][room.y].visited)
+			if (!this.rooms[room.position.x - 1][room.position.y].visited)
 			{
-				room.addUnvisitedNeighbor(this.rooms[room.x - 1][room.y]);
+				room.unvisitedNeighbors.push(this.rooms[room.position.x - 1][room.position.y]);
 			}
 		}
 
-		if (room.x < this.width - 1)
+		if (room.position.x < this.width - 1)
 		{
-			if (!this.rooms[room.x + 1][room.y].visited)
+			if (!this.rooms[room.position.x + 1][room.position.y].visited)
 			{
-				room.addUnvisitedNeighbor(this.rooms[room.x + 1][room.y]);
+				room.unvisitedNeighbors.push(this.rooms[room.position.x + 1][room.position.y]);
 			}
 		}
 
-		if (room.y > 0)
+		if (room.position.y > 0)
 		{
-			if (!this.rooms[room.x][room.y - 1].visited)
+			if (!this.rooms[room.position.x][room.position.y - 1].visited)
 			{
-				room.addUnvisitedNeighbor(this.rooms[room.x][room.y - 1]);
+				room.unvisitedNeighbors.push(this.rooms[room.position.x][room.position.y - 1]);
 			}
 		}
 
-		if (room.y < this.height - 1)
+		if (room.position.y < this.height - 1)
 		{
-			if (!this.rooms[room.x][room.y + 1].visited)
+			if (!this.rooms[room.position.x][room.position.y + 1].visited)
 			{
-				room.addUnvisitedNeighbor(this.rooms[room.x][room.y + 1]);
+				room.unvisitedNeighbors.push(this.rooms[room.position.x][room.position.y + 1]);
 			}
 		}
 }
 
 Maze.prototype.removeWalls = function(firstRoom, secondRoom)
 {
-	if (firstRoom.x < secondRoom.x)
+	if (firstRoom.position.x < secondRoom.position.x)
 	{
 		firstRoom.walls.right = false;
 		secondRoom.walls.left = false;
 	}
-	else if (firstRoom.x > secondRoom.x)
+	else if (firstRoom.position.x > secondRoom.position.x)
 	{
 		firstRoom.walls.left = false;
 		secondRoom.walls.right = false;
 	}
-	else if (firstRoom.y < secondRoom.y)
+	else if (firstRoom.position.y < secondRoom.position.y)
 	{
 		firstRoom.walls.down = false;
 		secondRoom.walls.up = false;
 	}
-	else if (firstRoom.y > secondRoom.y)
+	else if (firstRoom.position.y > secondRoom.position.y)
 	{
 		firstRoom.walls.up = false;
 		secondRoom.walls.down = false;
 	}
 }
 
-Maze.prototype.generate = function()
+/*
+-> Recursive backtracker
+https://en.wikipedia.org/wiki/Maze_generation_algorithm 
+*/
+
+Maze.prototype.generate = function() 
 {
 	this.currentRoom = this.rooms[this.startX][this.startY];
 	this.currentRoom.visited = true;
@@ -206,6 +208,7 @@ Maze.prototype.generate = function()
 			var r = this.currentRoom.unvisitedNeighbors[Math.floor(Math.random() * this.currentRoom.unvisitedNeighbors.length)];
 			this.stack.push(this.currentRoom);
 			this.removeWalls(this.currentRoom, r);
+			this.addPath(this.currentRoom, r);
 			this.currentRoom = r;
 			this.currentRoom.visited = true;
 			this.roomsVisited++;
@@ -226,16 +229,42 @@ Maze.prototype.draw = function(ctx)
 	{
 		for (var j = 0; j < this.height; j++)
 		{
-			this.rooms[i][j].drawWalls(ctx, this.wallWidth, this.wallHeight, this.color);
+			this.rooms[i][j].drawWalls(ctx, this.wallWidth, this.wallHeight);
 		}
 	}
 
 	for (var i = 0; i < this.width; i++)
 	{
-		this.rooms[i][this.height-1].drawDownWalls(ctx, this.wallWidth, this.wallHeight, this.color);
+		this.rooms[i][this.height-1].drawDownWalls(ctx, this.wallWidth, this.wallHeight);
 	}
 	for (var i = 0; i < this.height; i++)
 	{
-		this.rooms[this.width-1][i].drawRightWalls(ctx, this.wallWidth, this.wallHeight, this.color);
+		this.rooms[this.width-1][i].drawRightWalls(ctx, this.wallWidth, this.wallHeight);
 	}
+}
+
+Maze.prototype.addPath = function(fatherRoom, childRoom)
+{
+	this.paths[childRoom.position.x][childRoom.position.y] = {x: fatherRoom.position.x, y: fatherRoom.position.y};
+}
+
+Maze.prototype.findYourPath = function(yourRoom)
+{
+	var x = yourRoom.position.x;
+	var y = yourRoom.position.y;
+	var tmpX;
+	var tmpY;
+	var path = [];
+
+	while(x+y != 0)
+	{
+		//this.rooms[x][y].color = "rgb(0,120,0)";
+		path.push(this.paths[x][y]);
+		tmpX = this.paths[x][y].x;
+		tmpY = this.paths[x][y].y;
+		x = tmpX;
+		y = tmpY;
+	}
+
+	return path;
 }

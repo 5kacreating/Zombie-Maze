@@ -5,6 +5,16 @@ var cWidth = 600;
 var cHeight = 600;
 var player;
 var maze;
+var mazeX = 0;
+var mazeY = 0;
+var mazeWidth = 12;
+var mazeHeight = 12;
+var roomWidth = 50;
+var roomHeight = 50;
+var wallWidth = 50;
+var wallHeight = 2;
+var playerStartX = 0;
+var playerStartY = 0;
 
 
 /*
@@ -20,18 +30,21 @@ window.onload = function()
 	canvas.height = cHeight;
 	player = new Player(1,1,1, "", 1,1);
 	newMaze();
-	maze.draw(ctx);
+	
 
 
 /*
 Calling update function refreshing our Canvas every ms.
 */
-	//setInterval(function(){update()}, 1);
+	setInterval(function(){update()}, 1);
 }
 
 function newMaze()
 {
-	maze = new Maze(0,0,15, 15, 40, 40, 40,2,0,0,"rgb(120,0,0)");
+	maze = new Maze(mazeX,mazeY,mazeWidth, mazeHeight,
+					roomWidth, roomHeight, wallWidth,
+					wallHeight,playerStartX,playerStartY,
+					"rgb(120,0,0)");
 	maze.generate();
 }
 
@@ -39,7 +52,7 @@ function newMaze()
 function update()
 {		
 	ctx.clearRect(0,0,canvas.width,canvas.height);
-	
+	maze.draw(ctx);
 }
 
 /*
