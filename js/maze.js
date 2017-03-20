@@ -21,37 +21,72 @@ function Room(x,y, width, height, mazePosition, color)
 	*/
 	this.visited = false;
 	this.unvisitedNeighbors = [];
+	this.colors = [
+		["rgb(10,0,0)", "rgb(70,20,0)", "rgb(60,0,0)","rgb(50,0,0)", "rgb(40,0,0)"],
+		["rgb(40,0,0)", "rgb(30,10,0)", "rgb(80,0,0)","rgb(70,0,0)", "rgb(60,0,0)"],
+		["rgb(10,0,0)", "rgb(30,0,0)", "rgb(20,0,0)", "rgb(10,0,0)", "rgb(30,0,0)"]
+	];
+	this.colors2 = [
+		["rgb(10,0,0)", "rgb(70,20,0)", "rgb(60,0,0)"],
+		["rgb(30,0,0)", "rgb(20,10,0)", "rgb(40,0,0)"],
+		["rgb(40,0,0)", "rgb(50,0,0)", "rgb(100,0,0)"],
+		["rgb(60,0,0)", "rgb(20,20,0)", "rgb(30,0,0)"],
+		["rgb(80,0,0)", "rgb(10,10,0)", "rgb(20,0,0)"]
+	
+	];
 
 }
 
 Room.prototype.drawWalls = function(ctx, wallWidth, wallHeight)
 {
-	
+	var t;
+	var q;
 	if (this.walls.up)
-	{	
-		ctx.beginPath();
-		var newImg = new Image;
+	{			
+	
+		t = this.width / 5;
+		q = wallHeight / 3;
+		for (var i = 0; i<3; i++)
+		{
+			for (var j = 0; j<5; j++)
+			{
+				ctx.beginPath();
+				ctx.fillStyle = this.colors[i][j];
+				ctx.rect(this.position.x * this.width + t*j + this.mazePosition.x, 
+				 this.position.y * this.height + i*q + this.mazePosition.y,
+				 t, 
+				 q);
 
-		newImg.onload = d(this.position);
-
-		function d(pos) {
-			newImg.src = 'img/wallup.png';
-    		ctx.drawImage(newImg, pos.x * roomWidth, pos.y * roomHeight, 100,100);
+				ctx.fill();
+				
+				
+			}
 		}
+	
+	
+		
 	}
 	if (this.walls.left)
 	{	
-		ctx.beginPath();
-		var newImg = new Image;
+		t = wallHeight / 3;
+		q = this.width / 5 ;
+		for (var i = 0; i<5; i++)
+		{
+			for (var j = 0; j<3; j++)
+			{
+				ctx.beginPath();
+				ctx.fillStyle = this.colors2[i][j];
+				ctx.rect(this.position.x * this.width + t*j + this.mazePosition.x, 
+				 this.position.y * this.height + i*q + this.mazePosition.y,
+				 t, 
+				 q);
 
-		newImg.onload = d(this.position);
-
-		function d(pos) {
-			newImg.src = 'img/wallleft.png';
-    		ctx.drawImage(newImg, pos.x * roomWidth, pos.y * roomHeight, 30,100);
+				ctx.fill();
+				
+				
+			}
 		}
 	}
-
 	
 }	
 
@@ -60,14 +95,14 @@ Room.prototype.drawDownWalls = function(ctx, wallWidth, wallHeight, color)
 	if (this.walls.down)
 	{	
 		ctx.beginPath();
-		var newImg = new Image;
-
-		newImg.onload = d(this.position);
-
-		function d(pos) {
-			newImg.src = 'img/wallup.png';
-    		ctx.drawImage(newImg, pos.x * roomWidth, pos.y * roomHeight + roomHeight, 100,100);
-		}
+		ctx.fillStyle = this.color;
+		ctx.strokeStyle = this.color;
+		ctx.rect(this.position.x * this.width + this.mazePosition.x,
+				 this.position.y * this.height + this.height + this.mazePosition.y,
+				 wallWidth,
+				 wallHeight);
+		ctx.stroke();
+		ctx.fill();
 	}
 }
 

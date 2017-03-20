@@ -1,18 +1,18 @@
 var resistance  = 0.8,
 	canvas,
 	ctx,
-	cWidth = 900,
-	cHeight = 700,
+	cWidth = 1000,
+	cHeight = 800,
 	player,
 	maze,
 	mazeX = 0,
 	mazeY = 0,
-	mazeWidth = 8,
-	mazeHeight = 6,
+	mazeWidth = 12,
+	mazeHeight = 10,
 	roomWidth = 100,
 	roomHeight = 100,
 	wallWidth = 100,
-	wallHeight = 30,
+	wallHeight = 40,
 	playerStartX = 0,
 	playerStartY = 0,
 	zombies = [],
@@ -33,7 +33,7 @@ window.onload = function()
 	ctx = canvas.getContext('2d');
 	canvas.width  = cWidth;
 	canvas.height = cHeight;
-	player = new Player (playerStartX * roomWidth + roomWidth/2, playerStartY * roomHeight + roomHeight/2, playerSpeed, "green", 10, 10);
+	player = new Player (playerStartX * roomWidth + roomWidth/2, playerStartY * roomHeight + roomHeight/2, playerSpeed, "rgb(0,200,0)", 10, 10);
 	newMaze();
 	createZombies();
 
@@ -49,7 +49,7 @@ function newMaze()
 	maze = new Maze(mazeX,mazeY,mazeWidth, mazeHeight,
 					roomWidth, roomHeight, wallWidth,
 					wallHeight,playerStartX,playerStartY,
-					"rgb(120,0,0)");
+					"rgb(80,0,0)");
 }
 
 function createZombies()
