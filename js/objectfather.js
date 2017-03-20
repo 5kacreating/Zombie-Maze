@@ -1,4 +1,4 @@
-function ObjectFather(x, y, speed, color, w, h, room)
+function ObjectFather(x, y, speed, color, w, h)
 {
 	this.position = new Vector(x,y);
 	this.speed = speed;
@@ -8,7 +8,7 @@ function ObjectFather(x, y, speed, color, w, h, room)
 	this.color = color;
 	this.w = w;
 	this.h = h;
-	this.room = room;
+
 
 	this.getRoomCoordinates = function()
 		{
@@ -16,6 +16,21 @@ function ObjectFather(x, y, speed, color, w, h, room)
 								  Math.floor(this.position.y / roomHeight));
 			return roomPos;
 		}
+
+	this.draw = function(ctx)
+	{
+		ctx.beginPath();
+		ctx.fillStyle = this.color;
+		ctx.strokeStyle = this.color;
+		ctx.rect(this.position.x - this.w / 2 + mazeX,
+				 this.position.y - this.h / 2 + mazeY,
+				 this.w,
+				 this.h);
+		ctx.stroke();
+		ctx.fill();
+	
+
+	}
 
 		
 }

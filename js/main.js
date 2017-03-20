@@ -1,8 +1,8 @@
 var resistance  = 0.8,
 	canvas,
 	ctx,
-	cWidth = 600,
-	cHeight = 600,
+	cWidth = 620,
+	cHeight = 620,
 	player,
 	maze,
 	mazeX = 0,
@@ -12,13 +12,14 @@ var resistance  = 0.8,
 	roomWidth = 50,
 	roomHeight = 50,
 	wallWidth = 50,
-	wallHeight = 2,
+	wallHeight = 15,
 	playerStartX = 0,
 	playerStartY = 0,
 	zombies = [],
 	zombiesNumber = Math.floor(Math.random() * 10) + 3,
-	playerSpeed = 0.1,
-	zombieSpeed = 0.1;
+	playerSpeed = 0.15,
+	zombieSpeed = 0.1,
+	mousePosition = new Vector(0,0);
 
 
 /*
@@ -32,7 +33,7 @@ window.onload = function()
 	ctx = canvas.getContext('2d');
 	canvas.width  = cWidth;
 	canvas.height = cHeight;
-	player = new Player (playerStartX, playerStartY, playerSpeed, "", 10, 10);
+	player = new Player (playerStartX * roomWidth + roomWidth/2, playerStartY * roomHeight + roomHeight/2, playerSpeed, "green", 10, 10);
 	newMaze();
 	createZombies();
 
@@ -76,6 +77,8 @@ function update()
 		zombies[z].update();
 		zombies[z].draw(ctx);
 	}
+	player.update();
+	player.draw(ctx);
 }
 
 /*
@@ -129,4 +132,12 @@ if (keyMap[38])
 
   	
 
+}
+
+document.onmousemove = mouseMove;
+
+function mouseMove(e)
+{
+	mousePosition.x = e.pageX + mazeX;
+	mousePosition.y = e.pageY + mazeY;
 }

@@ -2,26 +2,11 @@ function Zombie(x, y, speed, color, w, h, room, path)
 {
 	ObjectFather.call(this, x, y, speed, color, w, h, room);
 
+	this.room = room;
 	this.path = path;
 }
 
 
-
-
-Zombie.prototype.draw = function(ctx)
-	{
-		ctx.beginPath();
-		ctx.fillStyle = this.color;
-		ctx.strokeStyle = this.color;
-		ctx.rect(this.position.x - this.w / 2 + mazeX,
-				 this.position.y - this.h / 2 + mazeY,
-				 this.w,
-				 this.h);
-		ctx.stroke();
-		ctx.fill();
-	
-
-	}
 
 Zombie.prototype.update = function()
 	{
@@ -74,7 +59,9 @@ Zombie.prototype.getTargetDirection = function()
 Zombie.prototype.targetRoomReached = function()
 	{
 		var roomCoordinates = this.getRoomCoordinates();
-		if (this.path[0].x == roomCoordinates.x && this.path[0].y == roomCoordinates.y && this.path.length != 1)
+		if (this.path[0].x == roomCoordinates.x && 
+			this.path[0].y == roomCoordinates.y && 
+			this.path.length != 1)
 		{
 			this.path.shift();
 		}

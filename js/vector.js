@@ -25,6 +25,15 @@ Vector.prototype.mult = function(k)
 		this.y *= k;
 	}
 
+Vector.prototype.sub = function(v)
+	{
+		var x = this.x - v.x,
+			y = this.y - v.y;
+		var vec = new Vector(x,y);
+
+		return vec;
+	}
+
 Vector.prototype.length = function()
 	{
 		return (Math.sqrt(this.x*this.x + this.y*this.y));
