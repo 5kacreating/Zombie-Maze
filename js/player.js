@@ -69,11 +69,26 @@ Player.prototype.collision = function()
 
 Player.prototype.getDriection = function()
 	{
-		this.direction = mousePosition.sub(this.position);
+		this.direction.x = mousePosition.x - cWidth / 2;
+		this.direction.y = mousePosition.y - cHeight / 2;
 		this.direction.normal();
 
 	}
 
+Player.prototype.draw = function(ctx)
+	{
+		ctx.beginPath();
+		ctx.fillStyle = this.color;
+		ctx.strokeStyle = this.color;
+		ctx.rect(cWidth/2 - this.w / 2,
+				 cHeight/2 - this.h / 2,
+				 this.w,
+				 this.h);
+		ctx.stroke();
+		ctx.fill();
+	
+
+	}
 
 
 

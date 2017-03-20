@@ -92,3 +92,18 @@ Zombie.prototype.targetPositionChanged = function()
 			}
 		}
 	}
+
+Zombie.prototype.draw = function(ctx)
+	{
+		ctx.beginPath();
+		ctx.fillStyle = this.color;
+		ctx.strokeStyle = this.color;
+		ctx.rect(this.position.x - this.w / 2 + mazeX,
+				 this.position.y - this.h / 2 + mazeY,
+				 this.w,
+				 this.h);
+		ctx.stroke();
+		ctx.fill();
+	
+
+	}

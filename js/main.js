@@ -1,17 +1,17 @@
 var resistance  = 0.8,
 	canvas,
 	ctx,
-	cWidth = 1000,
-	cHeight = 800,
+	cWidth = 800,
+	cHeight = 600,
 	player,
 	maze,
-	mazeX = 0,
-	mazeY = 0,
+	mazeX = cWidth / 2,
+	mazeY = cHeight / 2,
 	mazeWidth = 12,
 	mazeHeight = 10,
-	roomWidth = 100,
-	roomHeight = 100,
-	wallWidth = 100,
+	roomWidth = 150,
+	roomHeight = 150,
+	wallWidth = 150,
 	wallHeight = 40,
 	playerStartX = 0,
 	playerStartY = 0,
@@ -71,13 +71,18 @@ function createZombies()
 function update()
 {		
 	ctx.clearRect(0,0,canvas.width,canvas.height);
+	
+	player.update();
+	mazeX = -player.position.x + cWidth / 2;
+	mazeY = -player.position.y + cHeight / 2;
+	maze.position.x = -player.position.x + cWidth / 2;
+	maze.position.y =  -player.position.y + cHeight / 2;
 	maze.draw(ctx);
 	for (var z in zombies)
 	{
 		zombies[z].update();
 		zombies[z].draw(ctx);
 	}
-	player.update();
 	player.draw(ctx);
 }
 
@@ -138,6 +143,6 @@ document.onmousemove = mouseMove;
 
 function mouseMove(e)
 {
-	mousePosition.x = e.pageX + mazeX;
-	mousePosition.y = e.pageY + mazeY;
+	mousePosition.x = e.pageX;
+	mousePosition.y = e.pageY;
 }

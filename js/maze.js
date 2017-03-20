@@ -1,9 +1,9 @@
-function Room(x,y, width, height, mazePosition, color)
+function Room(x,y, width, height, color)
 {
 	this.position = new Vector(x,y);
 	this.width = width;
 	this.height = height;
-	this.mazePosition = new Vector(mazePosition.x, mazePosition.y);
+	
 	this.color = color;
 
 	/*
@@ -52,8 +52,8 @@ Room.prototype.drawWalls = function(ctx, wallWidth, wallHeight)
 			{
 				ctx.beginPath();
 				ctx.fillStyle = this.colors[i][j];
-				ctx.rect(this.position.x * this.width + t*j + this.mazePosition.x, 
-				 this.position.y * this.height + i*q + this.mazePosition.y,
+				ctx.rect(this.position.x * this.width + t*j + mazeX, 
+				 this.position.y * this.height + i*q + mazeY,
 				 t, 
 				 q);
 
@@ -76,8 +76,8 @@ Room.prototype.drawWalls = function(ctx, wallWidth, wallHeight)
 			{
 				ctx.beginPath();
 				ctx.fillStyle = this.colors2[i][j];
-				ctx.rect(this.position.x * this.width + t*j + this.mazePosition.x, 
-				 this.position.y * this.height + i*q + this.mazePosition.y,
+				ctx.rect(this.position.x * this.width + t*j + mazeX, 
+				 this.position.y * this.height + i*q + mazeY,
 				 t, 
 				 q);
 
@@ -97,8 +97,8 @@ Room.prototype.drawDownWalls = function(ctx, wallWidth, wallHeight, color)
 		ctx.beginPath();
 		ctx.fillStyle = this.color;
 		ctx.strokeStyle = this.color;
-		ctx.rect(this.position.x * this.width + this.mazePosition.x,
-				 this.position.y * this.height + this.height + this.mazePosition.y,
+		ctx.rect(this.position.x * this.width + mazeX,
+				 this.position.y * this.height + this.height + mazeY,
 				 wallWidth,
 				 wallHeight);
 		ctx.stroke();
@@ -113,7 +113,7 @@ Room.prototype.drawRightWalls = function(ctx, wallWidth, wallHeight, color)
 		ctx.beginPath();
 		ctx.fillStyle = this.color;
 		ctx.strokeStyle = this.color;
-		ctx.rect(this.position.x * this.width + this.width, this.position.y * this.height, wallHeight, wallWidth);
+		ctx.rect(this.position.x * this.width + this.width + mazeX, this.position.y * this.height + mazeY, wallHeight, wallWidth);
 		ctx.stroke();
 		ctx.fill();
 	}
@@ -152,7 +152,7 @@ function Maze(x,y,width, height, roomHeight, roomWidth, wallWidth, wallHeight, s
 	{
 		for (var j = 0; j < this.height; j++)
 		{
-			this.rooms[i][j] = new Room(i,j, this.roomWidth, this.roomHeight, this.position, this.color); 
+			this.rooms[i][j] = new Room(i,j, this.roomWidth, this.roomHeight, this.color); 
 		}
 	}
 
