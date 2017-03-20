@@ -26,30 +26,32 @@ function Room(x,y, width, height, mazePosition, color)
 
 Room.prototype.drawWalls = function(ctx, wallWidth, wallHeight)
 {
+	
 	if (this.walls.up)
 	{	
 		ctx.beginPath();
-		ctx.fillStyle = this.color;
-		ctx.strokeStyle = this.color;
-		ctx.rect(this.position.x * this.width + this.mazePosition.x, 
-				 this.position.y * this.height + this.mazePosition.y,
-				 wallWidth + wallHeight, 
-				 wallHeight);
-		ctx.stroke();
-		ctx.fill();
+		var newImg = new Image;
+
+		newImg.onload = d(this.position);
+
+		function d(pos) {
+			newImg.src = 'img/wallup.png';
+    		ctx.drawImage(newImg, pos.x * roomWidth, pos.y * roomHeight, 100,100);
+		}
 	}
 	if (this.walls.left)
 	{	
 		ctx.beginPath();
-		ctx.fillStyle = this.color;
-		ctx.strokeStyle = this.color;
-		ctx.rect(this.position.x * this.width + this.mazePosition.x,
-		 		 this.position.y * this.height + this.mazePosition.y,
-		 		 wallHeight,
-		 		 wallWidth);
-		ctx.stroke();
-		ctx.fill();
+		var newImg = new Image;
+
+		newImg.onload = d(this.position);
+
+		function d(pos) {
+			newImg.src = 'img/wallleft.png';
+    		ctx.drawImage(newImg, pos.x * roomWidth, pos.y * roomHeight, 30,100);
+		}
 	}
+
 	
 }	
 
@@ -58,14 +60,14 @@ Room.prototype.drawDownWalls = function(ctx, wallWidth, wallHeight, color)
 	if (this.walls.down)
 	{	
 		ctx.beginPath();
-		ctx.fillStyle = this.color;
-		ctx.strokeStyle = this.color;
-		ctx.rect(this.position.x * this.width + this.mazePosition.x,
-				 this.position.y * this.height + this.height + this.mazePosition.y,
-				 wallWidth,
-				 wallHeight);
-		ctx.stroke();
-		ctx.fill();
+		var newImg = new Image;
+
+		newImg.onload = d(this.position);
+
+		function d(pos) {
+			newImg.src = 'img/wallup.png';
+    		ctx.drawImage(newImg, pos.x * roomWidth, pos.y * roomHeight + roomHeight, 100,100);
+		}
 	}
 }
 
