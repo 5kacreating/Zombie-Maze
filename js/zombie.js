@@ -25,7 +25,8 @@ Zombie.prototype.draw = function(ctx)
 
 Zombie.prototype.update = function()
 	{
-		if (this.path.length > 1)
+		this.targetPositionChanged();
+		if (this.path.length > 0)
 		{
 			this.targetRoomReached();
 		}
@@ -47,19 +48,13 @@ Zombie.prototype.collision = function()
 
 	}
 
-Zombie.prototype.getRoomCoordinates = function()
-	{
-		var roomPos = new Vector (Math.floor(this.position.x / roomWidth), 
-								  Math.floor(this.position.y / roomHeight));
-		return roomPos;
-	}
 
 
 Zombie.prototype.getTargetDirection = function()
 	{
 		var targetX,
 			targetY;
-		if (this.path.length == 1)
+		if (this.path.length <= 1)
 		{
 			targetX = player.position.x;
 			targetY = player.position.y;
@@ -79,8 +74,34 @@ Zombie.prototype.getTargetDirection = function()
 Zombie.prototype.targetRoomReached = function()
 	{
 		var roomCoordinates = this.getRoomCoordinates();
-		if (this.path[0].x == roomCoordinates.x && this.path[0].y == roomCoordinates.y)
+		if (this.path[0].x == roomCoordinates.x && this.path[0].y == roomCoordinates.y && this.path.length != 1)
 		{
 			this.path.shift();
+		}
+	}
+
+Zombie.prototype.targetPositionChanged = function()
+	{
+		var targetPosition = player.getRoomCoordinates();
+
+		if (targetPosition.x != this.path[this.path.length - 1].x || 
+			targetPosition.y != this.path[this.path.length - 1].y)
+		{
+			if (this.path.length > 1)
+			{
+				if (this.path[this.path.length - 2].x == targetPosition.x &&
+					this.path[this.path.length - 2].y == targetPosition.y)
+				{
+					this.path.pop();
+				}
+				else
+				{
+					this.path.push({x: targetPosition.x, y: targetPosition.y});
+				}
+			}
+			else
+			{
+				this.path.push({x: targetPosition.x, y: targetPosition.y});
+			}
 		}
 	}
