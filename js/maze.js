@@ -124,6 +124,7 @@ function Maze(x,y,width, height, roomHeight, roomWidth, wallWidth, wallHeight, s
 	this.stack = [];
 	this.currentRoom;
 
+	this.generate();
 }
 
 Maze.prototype.addNeighbors = function(room)
@@ -267,4 +268,18 @@ Maze.prototype.findYourPath = function(yourRoom)
 	}
 
 	return path;
+}
+
+Maze.prototype.getRandomRoom = function()
+{
+	var x, y;
+
+		do {
+	 	x = Math.floor(Math.random() * this.width),
+		y = Math.floor(Math.random() * this.height);
+			}
+		
+		while(x+y<4);
+
+	return this.rooms[x][y];
 }

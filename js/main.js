@@ -1,20 +1,24 @@
-var resistance  = 0.8;
-var canvas;
-var ctx;
-var cWidth = 600;
-var cHeight = 600;
-var player;
-var maze;
-var mazeX = 0;
-var mazeY = 0;
-var mazeWidth = 12;
-var mazeHeight = 12;
-var roomWidth = 50;
-var roomHeight = 50;
-var wallWidth = 50;
-var wallHeight = 2;
-var playerStartX = 0;
-var playerStartY = 0;
+var resistance  = 0.8,
+	canvas,
+	ctx,
+	cWidth = 600,
+	cHeight = 600,
+	player,
+	maze,
+	mazeX = 0,
+	mazeY = 0,
+	mazeWidth = 12,
+	mazeHeight = 12,
+	roomWidth = 50,
+	roomHeight = 50,
+	wallWidth = 50,
+	wallHeight = 2,
+	playerStartX = 0,
+	playerStartY = 0,
+	zombies = [],
+	zombiesNumber = Math.floor(Math.random() * 10) + 3,
+	playerSpeed = 0.1,
+	zombieSpeed = 0.1;
 
 
 /*
@@ -23,14 +27,14 @@ Our setup function when our JavaScript application is loaded.
 
 window.onload = function()
 {
-	
+	 
 	canvas = document.getElementById("canvas");
 	ctx = canvas.getContext('2d');
 	canvas.width  = cWidth;
 	canvas.height = cHeight;
-	player = new Player(1,1,1, "", 1,1);
+	player = new Player (playerStartX, playerStartY, playerSpeed, "", 10, 10);
 	newMaze();
-	
+	createZombies();
 
 
 /*
@@ -45,7 +49,21 @@ function newMaze()
 					roomWidth, roomHeight, wallWidth,
 					wallHeight,playerStartX,playerStartY,
 					"rgb(120,0,0)");
-	maze.generate();
+}
+
+function createZombies()
+{
+	var position,
+		room,
+		path;
+
+	for (var i = 0; i<zombiesNumber; i++)
+	{
+		room = maze.getRandomRoom();
+		position = new Vector(room.position.x * roomWidth + roomWidth / 2, room.position.y * roomHeight + roomHeight / 2);
+		path = maze.findYourPath(room);
+		zombies[i]= new Zombie(position.x, position.y, zombieSpeed, "black", 10, 10, room, path);
+	}
 }
 
 
@@ -53,6 +71,11 @@ function update()
 {		
 	ctx.clearRect(0,0,canvas.width,canvas.height);
 	maze.draw(ctx);
+	for (var z in zombies)
+	{
+		zombies[z].update();
+		zombies[z].draw(ctx);
+	}
 }
 
 /*

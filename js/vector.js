@@ -29,3 +29,11 @@ Vector.prototype.length = function()
 	{
 		return (Math.sqrt(this.x*this.x + this.y*this.y));
 	}
+
+Vector.prototype.distance = function(v)
+{
+	return (Math.sqrt(
+		(v.x - this.x) * (v.x - this.x)
+		+ (v.y - this.y) * (v.y - this.y)
+		));
+}	
