@@ -72,6 +72,10 @@ Room.prototype.getWallsUrl = function()
 		
 			
 			}
+			else if(!this.walls.left)
+			{
+				return "img/toprightleft.png";
+			}
 		
 		return "img/topright.png";
 				

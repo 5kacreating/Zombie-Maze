@@ -7,7 +7,9 @@ function Player(x, y, speed, color, w, h)
 
 Player.prototype.update = function()
 	{
-		if(this.position.distance(mousePosition) > this.w / 2)
+		var vec = new Vector (cWidth / 2, cHeight / 2);
+
+		if(vec.distance(mousePosition) > this.w / 2)
 		{
 		this.getDriection();
 		this.direction.mult(this.speed);
