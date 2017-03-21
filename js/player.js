@@ -7,9 +7,9 @@ function Player(x, y, speed, color, w, h)
 
 Player.prototype.update = function()
 	{
-		var vec = new Vector (cWidth / 2, cHeight / 2);
+	
 
-		if(vec.distance(mousePosition) > this.w / 2)
+		if(this.position.distance(mousePosition) > this.w / 2)
 		{
 		this.getDriection();
 		this.direction.mult(this.speed);
@@ -71,8 +71,8 @@ Player.prototype.collision = function()
 
 Player.prototype.getDriection = function()
 	{
-		this.direction.x = mousePosition.x - cWidth / 2;
-		this.direction.y = mousePosition.y - cHeight / 2;
+		this.direction.x = mousePosition.x - this.position.x;
+		this.direction.y = mousePosition.y - this.position.y;
 		this.direction.normal();
 
 	}
@@ -82,8 +82,8 @@ Player.prototype.draw = function(ctx)
 		ctx.beginPath();
 		ctx.fillStyle = this.color;
 		ctx.strokeStyle = this.color;
-		ctx.rect(cWidth/2 - this.w / 2,
-				 cHeight/2 - this.h / 2,
+		ctx.rect(this.position.x - this.w / 2,
+				 this.position.y - this.h / 2,
 				 this.w,
 				 this.h);
 		ctx.stroke();

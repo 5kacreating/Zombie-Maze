@@ -5,14 +5,14 @@ var resistance  = 0.8,
 	cHeight = 600,
 	player,
 	maze,
-	mazeX = cWidth / 2,
-	mazeY = cHeight / 2,
-	mazeWidth = 10,
-	mazeHeight = 10,
-	roomWidth = 200,
-	roomHeight = 200,
-	wallWidth = 200,
-	wallHeight = 23,
+	mazeX = 0,
+	mazeY = 0,
+	mazeWidth = 8,
+	mazeHeight = 6,
+	roomWidth = 100,
+	roomHeight = 100,
+	wallWidth = 100,
+	wallHeight = 17,
 	playerStartX = 0,
 	playerStartY = 0,
 	zombies = [],
@@ -35,7 +35,10 @@ window.onload = function()
 	canvas.height = cHeight;
 
 	player = new Player (playerStartX * roomWidth + roomWidth/2, playerStartY * roomHeight + roomHeight/2, playerSpeed, "rgb(0,200,0)", 10, 10);
+	
 	newMaze();
+	maze.draw(ctx);
+	player.update();
 	createZombies();
 
 
@@ -65,24 +68,31 @@ function createZombies()
 		position = new Vector(room.position.x * roomWidth + roomWidth / 2, room.position.y * roomHeight + roomHeight / 2);
 		path = maze.findYourPath(room);
 		zombies[i]= new Zombie(position.x, position.y, zombieSpeed, "black", 10, 10, room, path);
+		zombies[i].update();
 	}
 }
 
 
 function update()
 {		
-	ctx.clearRect(0,0,canvas.width,canvas.height);
-	
+	//ctx.clearRect(0,0,canvas.width,canvas.height);
+	player.clearYourRoom();
 	player.update();
-	mazeX = -player.position.x + cWidth / 2;
-	mazeY = -player.position.y + cHeight / 2;
-	maze.position.x = -player.position.x + cWidth / 2;
-	maze.position.y =  -player.position.y + cHeight / 2;
-	maze.draw(ctx);
+	if (player.position.x > cWidth)
+	{
+		mazeX -= player.position.x;
+	}
+	//maze.draw(ctx);
 	for (var z in zombies)
 	{
+		zombies[z].clearYourRoom();
 		zombies[z].update();
-		zombies[z].draw(ctx);
+		
+	}
+
+	for (var z in zombies)
+	{
+	zombies[z].draw(ctx);
 	}
 	player.draw(ctx);
 }
@@ -144,6 +154,7 @@ document.onmousemove = mouseMove;
 
 function mouseMove(e)
 {
-	mousePosition.x = e.pageX;
-	mousePosition.y = e.pageY;
+	var rect = canvas.getBoundingClientRect();
+	mousePosition.x = e.pageX - rect.left;
+	mousePosition.y = e.pageY - rect.top;
 }
