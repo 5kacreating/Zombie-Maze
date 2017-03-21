@@ -39,13 +39,14 @@ Room.prototype.drawWalls = function(ctx)
 		
 		this.img.onload = function()
 			{
-		ctx.drawImage(this, width, height, roomWidth, roomHeight);
+		ctx.drawImage(this, width, height, roomWidth + 1, roomHeight + 1);
 			}
 		this.img.src = this.getWallsUrl();
 		}
 		else
 		{
-			ctx.drawImage(this.img, width, height, roomWidth, roomHeight);
+
+			ctx.drawImage(this.img, Math.floor(width), Math.floor(height), roomWidth, roomHeight);
 		}
 
 	}
