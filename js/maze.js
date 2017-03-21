@@ -21,104 +21,119 @@ function Room(x,y, width, height, color)
 	*/
 	this.visited = false;
 	this.unvisitedNeighbors = [];
-	this.colors = [
-		["rgb(10,0,0)", "rgb(70,20,0)", "rgb(60,0,0)","rgb(50,0,0)", "rgb(40,0,0)"],
-		["rgb(40,0,0)", "rgb(30,10,0)", "rgb(80,0,0)","rgb(70,0,0)", "rgb(60,0,0)"],
-		["rgb(10,0,0)", "rgb(30,0,0)", "rgb(20,0,0)", "rgb(10,0,0)", "rgb(30,0,0)"]
-	];
-	this.colors2 = [
-		["rgb(10,0,0)", "rgb(70,20,0)", "rgb(60,0,0)"],
-		["rgb(30,0,0)", "rgb(20,10,0)", "rgb(40,0,0)"],
-		["rgb(40,0,0)", "rgb(50,0,0)", "rgb(100,0,0)"],
-		["rgb(60,0,0)", "rgb(20,20,0)", "rgb(30,0,0)"],
-		["rgb(80,0,0)", "rgb(10,10,0)", "rgb(20,0,0)"]
-	
-	];
+	this.img;
+
+
+}
+Room.prototype.drawWalls = function(ctx)
+{
+	var width = this.position.x * this.width + mazeX,
+		height = this.position.y * this.height + mazeY;
+
+	if (width < cWidth && height < cHeight && width + this.width >= 0 && height + this.height >= 0)
+	{
+		if (!this.img)
+		{
+			this. img = new Image,
+			pos = this.position;
+		
+		this.img.onload = function()
+			{
+		ctx.drawImage(this, width, height, roomWidth, roomHeight);
+			}
+		this.img.src = this.getWallsUrl();
+		}
+		else
+		{
+			ctx.drawImage(this.img, width, height, roomWidth, roomHeight);
+		}
+
+	}
 
 }
 
-Room.prototype.drawWalls = function(ctx, wallWidth, wallHeight)
-{
-	var t;
-	var q;
-	if (this.walls.up)
-	{			
-	
-		t = this.width / 5;
-		q = wallHeight / 3;
-		for (var i = 0; i<3; i++)
-		{
-			for (var j = 0; j<5; j++)
-			{
-				ctx.beginPath();
-				ctx.fillStyle = this.colors[i][j];
-				ctx.rect(this.position.x * this.width + t*j + mazeX, 
-				 this.position.y * this.height + i*q + mazeY,
-				 t, 
-				 q);
 
-				ctx.fill();
+Room.prototype.getWallsUrl = function()
+{
+	
+	
+	if(!this.walls.up)
+	{
+		if(!this.walls.right)
+		{
+			if(!this.walls.down)
+			{
+				if (!this.walls.left)
+				{
+					return "img/all.png";
+				}
+			
+			return "img/toprightdown.png";
+		
+			
+			}
+		
+		return "img/topright.png";
 				
+		}
+		else if(!this.walls.left)
+		{
+			if(!this.walls.down)
+			{
+				return "img/topleftdown.png";
+			}
+
+			return "img/topleft.png";
+					
+		}
+		else if(!this.walls.down)
+		{
+			return "img/topdown.png";
+				
+		}
+		
+		return "img/top.png";
+	
+	}
+	else if (!this.walls.right)
+	{
+		if(!this.walls.down)
+		{
+			if(!this.walls.left)
+			{
+				return "img/rightdownleft.png";
 				
 			}
+		
+		return "img/rightdown.png";
+	
 		}
-	
-	
+		else if(!this.walls.left)
+		{
+			return "img/leftright.png";
+		}
+
+		return "img/right.png";
 		
 	}
-	if (this.walls.left)
-	{	
-		t = wallHeight / 3;
-		q = this.width / 5 ;
-		for (var i = 0; i<5; i++)
+	else if (!this.walls.down)
+	{
+		if (!this.walls.left)
 		{
-			for (var j = 0; j<3; j++)
-			{
-				ctx.beginPath();
-				ctx.fillStyle = this.colors2[i][j];
-				ctx.rect(this.position.x * this.width + t*j + mazeX, 
-				 this.position.y * this.height + i*q + mazeY,
-				 t, 
-				 q);
-
-				ctx.fill();
-				
-				
-			}
+			return "img/downleft.png";
+			
 		}
+		return "img/down.png";
+	
+	}
+	else if (!this.walls.left)
+	{
+		return "img/left.png";
+		
 	}
 	
+	return "";
 }	
-
-Room.prototype.drawDownWalls = function(ctx, wallWidth, wallHeight, color)
-{
-	if (this.walls.down)
-	{	
-		ctx.beginPath();
-		ctx.fillStyle = this.color;
-		ctx.strokeStyle = this.color;
-		ctx.rect(this.position.x * this.width + mazeX,
-				 this.position.y * this.height + this.height + mazeY,
-				 wallWidth,
-				 wallHeight);
-		ctx.stroke();
-		ctx.fill();
-	}
-}
-
-Room.prototype.drawRightWalls = function(ctx, wallWidth, wallHeight, color)
-{
-	if (this.walls.right)
-	{	
-		ctx.beginPath();
-		ctx.fillStyle = this.color;
-		ctx.strokeStyle = this.color;
-		ctx.rect(this.position.x * this.width + this.width + mazeX, this.position.y * this.height + mazeY, wallHeight, wallWidth);
-		ctx.stroke();
-		ctx.fill();
-	}
-}
-
 
 
 
@@ -162,6 +177,8 @@ function Maze(x,y,width, height, roomHeight, roomWidth, wallWidth, wallHeight, s
 	this.currentRoom;
 
 	this.generate();
+
+	
 }
 
 Maze.prototype.addNeighbors = function(room)
@@ -267,18 +284,11 @@ Maze.prototype.draw = function(ctx)
 	{
 		for (var j = 0; j < this.height; j++)
 		{
-			this.rooms[i][j].drawWalls(ctx, this.wallWidth, this.wallHeight);
+			this.rooms[i][j].drawWalls(ctx);
 		}
 	}
 
-	for (var i = 0; i < this.width; i++)
-	{
-		this.rooms[i][this.height-1].drawDownWalls(ctx, this.wallWidth, this.wallHeight);
-	}
-	for (var i = 0; i < this.height; i++)
-	{
-		this.rooms[this.width-1][i].drawRightWalls(ctx, this.wallWidth, this.wallHeight);
-	}
+
 }
 
 Maze.prototype.addPath = function(fatherRoom, childRoom)
