@@ -39,7 +39,7 @@ Player.prototype.collision = function()
 		}
 		if(room.walls.right)
 		{
-			if (rlPos.x + roomWidth <= this.position.x + this.w / 2)
+			if (rlPos.x + roomWidth <= this.position.x + this.w * 2)
 			{
 				this.acceleration.x *= -1;
 				this.velocity.x *= -1;
@@ -48,7 +48,7 @@ Player.prototype.collision = function()
 		}
 		if(room.walls.down)
 		{
-			if (rlPos.y + roomHeight <= this.position.y + this.h / 2)
+			if (rlPos.y + roomHeight <= this.position.y + this.h * 2)
 			{
 				this.acceleration.y *= -1;
 				this.velocity.y *= -1;
@@ -57,7 +57,7 @@ Player.prototype.collision = function()
 		}
 		if(room.walls.left)
 		{
-			if (rlPos.x + wallHeight >= this.position.x + this.w / 2)
+			if (rlPos.x + wallHeight >= this.position.x - this.w / 2)
 			{
 				this.acceleration.x *= -1;
 				this.velocity.x *= -1;

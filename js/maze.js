@@ -39,7 +39,7 @@ Room.prototype.drawWalls = function(ctx)
 		
 		this.img.onload = function()
 			{
-		ctx.drawImage(this, width, height, roomWidth + 1, roomHeight + 1);
+		ctx.drawImage(this, width, height, roomWidth, roomHeight);
 			}
 		this.img.src = this.getWallsUrl();
 		}
